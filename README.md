@@ -133,6 +133,75 @@ Use [`adoption/migration-guide.md`](adoption/migration-guide.md) when the reposi
 
 In either case, the adoption ORCH should inspect the actual repository first and populate project-specific rules rather than blindly copying another project's environment assumptions.
 
+## Let an AI agent install the protocol
+
+You do not need to copy the files manually. If your coding agent can read both this repository and the target project, give it this repository URL and ask it to adopt the protocol into the target repository.
+
+The agent should treat the **target repository as the source of truth for project reality** and this repository as the source of truth for the **common development protocol**. It must adapt project-specific commands, risk triggers, runtime constraints, release rules, and routing instead of copying assumptions from another project.
+
+### Minimal prompt
+
+```text
+Adopt the Agent Development Protocol from:
+https://github.com/7Lumine/agent-development-protocol
+
+Inspect this target repository as the source of truth and apply the protocol appropriately.
+Use adoption/bootstrap-prompt.md for first-time adoption, or adoption/migration-guide.md if an existing agent/development workflow must be reconciled.
+Do not change product behavior as part of protocol adoption.
+```
+
+For many projects, this is enough when the agent has repository access and can inspect the current development setup itself.
+
+### Recommended prompt
+
+Use this version when you want the adoption boundary to be explicit:
+
+```text
+Adopt the Agent Development Protocol from:
+https://github.com/7Lumine/agent-development-protocol
+
+Target repository: <owner/repository>
+
+Requirements:
+1. Treat the target repository as the source of truth for its current code, tooling, CI, deployment/release process, and existing agent rules.
+2. Read the protocol repository before editing the target repository.
+3. Decide whether this is first-time adoption or migration of an existing workflow, then follow the corresponding adoption guide.
+4. Create/adapt the Project Profile from verified project facts, including official verification commands/cwd, Critical-risk triggers, environment capabilities/limitations, and real-environment/release gates.
+5. Establish one role-routing source of truth for model / effort / backend / runtime access. Do not duplicate concrete routing values across task contracts or process documents.
+6. Keep runtime capability separate from role permission. Review roles may have broad execution capability while tracked-file edits remain prohibited.
+7. Keep AGENTS.md short and use it as an entry point to the lifecycle, Project Profile, router, and task artifacts rather than duplicating those sources of truth.
+8. Preserve Low / Normal / Critical risk scaling; do not make every task Critical.
+9. Do not add extra review phases, mutation requirements, SHA-256 checks, artifacts, or hardening without a concrete project need.
+10. Do not change product code, DB/API/UI behavior, business logic, or deployment behavior merely to adopt the protocol.
+11. After adoption, perform one independent process review scoped to the adoption diff. Review contradictions, broken references, duplicate sources of truth, routing/access conflicts, and migration accuracy; do not redesign the protocol from scratch.
+
+Report:
+- files added/changed
+- Project Profile decisions and remaining unknowns
+- official verification source of truth
+- role-routing source of truth
+- Low / Normal / Critical routes
+- existing rules removed, redirected, or preserved
+- independent review result
+- git/branch/push state
+```
+
+### What the adopting agent should produce
+
+A successful adoption normally leaves the target repository with:
+
+- a short `AGENTS.md` entry point
+- a project-specific Project Profile
+- the adopted lifecycle and ORCH contract, or clearly versioned references to them
+- Task Contract / Evidence / Findings templates
+- one live role-routing source of truth
+- no conflicting duplicate process rules
+- an adoption diff that does not change product behavior
+
+For an existing repository with substantial agent rules, the agent should **reconcile** them rather than stacking a second workflow on top. For a greenfield project, it should keep the initial setup minimal and let the protocol grow only when real project needs justify it.
+
+If this protocol repository is private, the adopting agent must have GitHub access to it.
+
 ## Review identity
 
 For SHA-based review, do not assume branch/PR HEAD is the target.
