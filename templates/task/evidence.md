@@ -1,20 +1,29 @@
 # <TASK-ID> Evidence
 
 Contract: [contract.md](contract.md)
-Candidate SHA:
+Task phase: draft | spec-review | frozen | implementation | code-review | accepted
 Last updated:
 
-## SHA
+> This file holds mutable task state and review identity. Updating this metadata advances the repository HEAD but does **not** change the recorded frozen contract or implementation candidate identities.
+
+## Review identity
 
 | Type | SHA | Notes |
 |---|---|---|
-| baseline |  |  |
-| frozen contract |  |  |
-| candidate |  |  |
+| baseline |  | comparison/reality-check origin |
+| frozen contract |  | commit that contains the immutable frozen `contract.md` |
+| implementation candidate |  | implementation commit to review |
+| current review target |  | normally equal to implementation candidate for code review |
+
+Rules:
+- A metadata/artifact commit after the candidate is **not** automatically a new candidate.
+- Reviewers must resolve and confirm the recorded review-target SHA themselves.
+- If branch/PR HEAD differs from the recorded review target, report the difference and keep the requested target fixed unless ORCH explicitly re-targets the review.
+- Never chase current HEAD merely because evidence/findings metadata was updated after the candidate commit.
 
 ## Changed files
 
-<!-- Measured from git, not only reported by the implementer. -->
+<!-- Measured from git between the relevant baseline/frozen point and candidate, not only reported by the implementer. -->
 
 ## Verification performed
 
