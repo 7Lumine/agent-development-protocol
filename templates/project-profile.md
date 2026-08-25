@@ -1,6 +1,8 @@
 # Project Profile
 
-This file contains only project-specific facts that customize the common Agent Development Protocol.
+This file is the canonical source of truth for project-specific reality that customizes the common Agent Development Protocol.
+
+It owns **official verification commands** and **available execution capabilities/limitations**. It does **not** assign role-specific model/effort/backend/runtime access; those choices belong to the project's single role router. Role permissions such as tracked-file edit rights belong to the role contract, not this profile.
 
 ## Project
 
@@ -10,7 +12,9 @@ This file contains only project-specific facts that customize the common Agent D
 - Primary stack:
 - Deployment model:
 
-## Official verification
+## Official verification — canonical source of truth
+
+Record the exact commands, working directories, and applicability rules here. `AGENTS.md` and task prompts should reference this section rather than duplicate command tables.
 
 | Gate | Command | cwd | Required for |
 |---|---|---|---|
@@ -20,6 +24,8 @@ This file contains only project-specific facts that customize the common Agent D
 | build |  |  |  |
 | migration/other |  |  |  |
 
+Do not claim a gate passed using a narrower substitute command unless this profile explicitly permits it.
+
 ## Repository and worktree rules
 
 - Branch policy:
@@ -28,13 +34,18 @@ This file contains only project-specific facts that customize the common Agent D
 - Merge policy:
 - CI status/capabilities:
 
-## Agent execution environment
+## Agent execution environment — capabilities and limitations
+
+Record facts about what the environment can do. Do not assign role-specific runtime access here.
 
 - Available agent backends/providers:
-- Full-access capability:
+- Available execution capabilities:
+- Network/filesystem/runtime limitations:
 - Known sandbox/tooling limitations:
 - Required local services:
 - Required credentials or user-controlled actions:
+
+The role router chooses model / effort / backend / runtime access from within these verified capabilities. A role contract separately defines what the agent is permitted to modify.
 
 ## Critical-risk triggers
 
@@ -69,7 +80,7 @@ What cannot be proven by repository tests alone?
 ## Project-specific review constraints
 
 - Areas requiring independent review:
-- Areas where a reviewer may execute tests but may not edit:
+- Areas where runtime limitations affect verification:
 - Known false-positive/over-engineering traps:
 
 ## Project-specific non-goals
