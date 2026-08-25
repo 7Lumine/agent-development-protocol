@@ -14,14 +14,15 @@ This repository was generalized from a production development workflow, but proj
 - ORCH / implementation / review role separation
 - short-lived orchestration sessions and repository-based handoff
 - Task Contract / Evidence / Findings artifacts
-- state-model requirements for state-bearing changes
+- risk-scaled state-model requirements
 - `SPEC_UNDEFINED` instead of implementer guesswork
 - independent review with explicit Blocker criteria
 - two-round review convergence (`R1` broad, `R2` closure)
 - finding classification and routing
 - evidence proportional to risk
-- clear separation between runtime capability and role permission
-- one-source-of-truth model/provider/effort routing
+- clear separation between environment capability, runtime routing, and role permission
+- one-source-of-truth model/provider/effort/backend/runtime-access routing
+- immutable frozen-contract identity and explicit candidate/review-target identity
 
 ## Repository layout
 
@@ -29,22 +30,22 @@ This repository was generalized from a production development workflow, but proj
 protocol/
   development-lifecycle.md       Common lifecycle source of truth
   orchestrator-contract.md       ORCH responsibilities and session lifetime
-  model-routing.example.md       Example model/effort policy
+  model-routing.example.md       Example model/effort/runtime-access policy
 
 templates/
   AGENTS.md                       Short repository entry-point template
   project-profile.md              Project-specific reality/profile template
   task/
-    contract.md
-    evidence.md
-    findings.md
+    contract.md                  Immutable after freeze for a contract version
+    evidence.md                  Mutable task phase/review identity/evidence
+    findings.md                  Mutable findings/routing/closure
 
 integrations/
   claude/codex-task/SKILL.md      Generic role-router Skill template
 
 adoption/
-  bootstrap-prompt.md             Prompt for introducing the protocol to a repo
-  migration-guide.md              Guide for moving an existing workflow
+  bootstrap-prompt.md             First-time adoption into a repository
+  migration-guide.md              Reconcile/replace an existing agent workflow
 ```
 
 ## Common vs project-specific
@@ -64,12 +65,26 @@ Each adopting project owns its facts.
 - official test/lint/build commands and cwd
 - branch/worktree rules
 - Critical-risk triggers
-- tool/runtime limitations
+- tool/runtime capabilities and limitations
 - model/provider IDs if pinned
 - deployment/release/rollback gates
 - project-specific invariants
 
 See [`templates/project-profile.md`](templates/project-profile.md).
+
+## Source-of-truth ownership
+
+Keep each concern in one place:
+
+- **Project Profile:** verified project facts, official verification commands/cwd, available runtime capabilities/limitations
+- **Role router/config:** role -> model / effort / backend / runtime-access selection
+- **Role contract + Task Contract:** what a role may edit/do for the task
+- **AGENTS.md:** short entry point and links only; do not duplicate the command/access tables
+- **Task Contract:** specification and guarantee boundary; immutable once frozen for a contract version
+- **Evidence:** mutable task phase and baseline/frozen/candidate/review-target SHAs
+- **Findings:** mutable review findings, dispositions, routing, and closure
+
+Runtime capability and edit permission are different. A reviewer may use a broad-capability runtime while still being forbidden from editing tracked files.
 
 ## Suggested role pattern
 
@@ -108,10 +123,24 @@ A current example routing is in [`protocol/model-routing.example.md`](protocol/m
 
 ## Adoption
 
-For an existing repository, start with [`adoption/bootstrap-prompt.md`](adoption/bootstrap-prompt.md).
-The adoption ORCH should inspect the actual repository first and populate project-specific rules rather than blindly copying another project's environment assumptions.
+### First-time / greenfield adoption
 
-For migration from an existing multi-document workflow, use [`adoption/migration-guide.md`](adoption/migration-guide.md).
+Use [`adoption/bootstrap-prompt.md`](adoption/bootstrap-prompt.md) when the repository does not yet have a substantial Agent Development Protocol. This can be a greenfield project or an existing codebase with little/no agent workflow.
+
+### Existing workflow migration
+
+Use [`adoption/migration-guide.md`](adoption/migration-guide.md) when the repository already has multiple process documents, agent rules, review queues, or routing rules that must be reconciled rather than simply added.
+
+In either case, the adoption ORCH should inspect the actual repository first and populate project-specific rules rather than blindly copying another project's environment assumptions.
+
+## Review identity
+
+For SHA-based review, do not assume branch/PR HEAD is the target.
+
+- frozen contract SHA identifies the immutable contract version
+- implementation candidate SHA identifies the code candidate
+- later metadata commits may update Evidence/Findings without becoming a new candidate
+- a reviewer confirms the recorded review-target SHA and does not silently move it when HEAD differs
 
 ## Design constraints
 
@@ -123,9 +152,8 @@ This protocol deliberately avoids several common failure modes:
 - letting reviewers invent stronger requirements as Blockers
 - using higher model effort as a substitute for a clear contract
 - repeatedly starting broad third/fourth/fifth reviews instead of diagnosing non-convergence
-- scattering concrete model/effort/provider choices through every task document
+- scattering concrete model/effort/provider/runtime-access choices through every task document
+- duplicating official verification command tables across Profile and AGENTS
+- conflating runtime capability with tracked-file permission
+- making task metadata edits silently move a SHA-fixed review target
 - adding SHA-256, mutation suites, or audit artifacts without a concrete failure mode
-
-## Status
-
-The initial generalized version is being prepared on `feat/initial-protocol` for review before merge to `main`.
