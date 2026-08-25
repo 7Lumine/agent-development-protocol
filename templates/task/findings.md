@@ -5,9 +5,11 @@ Last updated:
 
 ## Index
 
+Use the exact canonical classification strings from `protocol/development-lifecycle.md`.
+
 | # | Round | Severity | Classification | Summary | Routing | Status |
 |---|---|---|---|---|---|---|
-|  | S-R1 / I-R1 / ... | blocker / high / medium / low / suggestion | implementation / specification / pre-existing / evidence / review-process / review-scope-expansion / non-blocking-suggestion |  | implementer / contract / separate task / verifier / backlog | open / closed / rejected |
+|  | S-R1 / I-R1 / ... | blocker / high / medium / low / suggestion | `implementation defect` / `specification defect` / `pre-existing defect` / `evidence defect` / `review/process defect` / `review scope expansion` / `non-blocking suggestion` |  | implementer / ORCH-contract / separate task / implementer-verifier / ORCH-process owner / backlog / ORCH cost-benefit | open / closed / rejected |
 
 ## Blocker / High details
 
