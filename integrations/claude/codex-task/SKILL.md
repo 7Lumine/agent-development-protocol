@@ -8,19 +8,28 @@ description: Role-based development-task router. Selects spec-review, implementa
 Read the adopting project's:
 1. development lifecycle
 2. orchestrator contract
-3. project profile / AGENTS
+3. project profile
 4. live model-routing source of truth
+5. short AGENTS entry point if present
 
 Do not infer project commands, risk, or access rules from this generic file.
+
+## Source-of-truth boundaries
+
+- **Project Profile**: project facts, official verification commands/cwd, available runtime capabilities and limitations
+- **Role router/config**: role -> model / effort / backend / runtime-access selection
+- **Role contract + Task Contract**: what the role is permitted to edit/do for the current task
+
+Runtime capability is not edit permission. Do not duplicate concrete runtime-access values in AGENTS or task contracts.
 
 ## Routing procedure
 
 1. classify the task as Low / Normal / Critical
-2. choose the required role for the current phase
+2. choose only the roles required by that Risk route and current phase
 3. ensure the required task artifact exists
-4. resolve model / effort / backend / access from the project's single routing table
+4. resolve model / effort / backend / runtime access from the project's single routing table, within capabilities verified by the Project Profile
 5. launch the role with a bounded prompt
-6. classify returned findings before routing them
+6. classify returned findings using the lifecycle's exact canonical classification strings before routing them
 7. preserve the two-round convergence rule
 
 ## Role contracts
@@ -40,7 +49,7 @@ Blocker/High output must include:
 - violated requirement/invariant
 - concrete reachable failure mode
 - minimum correction
-- classification
+- classification using the lifecycle's canonical string
 - introduced vs pre-existing
 
 Prohibited:
@@ -54,7 +63,7 @@ Input:
 - frozen contract SHA/version
 - Allowed files
 - Forbidden changes
-- official verification gates
+- official verification gates by reference to the Project Profile
 
 Behavior:
 - implement the frozen contract
@@ -70,12 +79,16 @@ Prohibited:
 ### `role=code-review`
 
 Input:
-- frozen contract
-- candidate SHA
+- frozen contract SHA/version
+- recorded implementation-candidate / review-target SHA from evidence
 - evidence artifact
 
+First action:
+- resolve and confirm the requested review-target SHA
+- if branch/PR HEAD differs, report that difference and **do not move the target** unless ORCH explicitly re-targets the review
+
 Purpose:
-- test whether candidate satisfies the frozen contract and important direct dependencies
+- test whether the fixed candidate satisfies the frozen contract and important direct dependencies
 
 Prohibited:
 - tracked-file edits
@@ -85,7 +98,7 @@ Prohibited:
 ### `role=verify`
 
 Input:
-- exact commands/checks
+- exact commands/checks from the Project Profile
 - expected results
 - environment/cwd
 
@@ -110,7 +123,7 @@ Not a broad reviewer. Do not use it to accumulate new findings.
 ## Capability vs permission
 
 A runtime may need broad capability for valid diagnostics while the role is still prohibited from modifying tracked files.
-Keep access capability and role permission separate.
+Keep runtime-access selection and role permission separate.
 Do not hardcode one restrictive sandbox mode in this generic router.
 
 ## Session rules
