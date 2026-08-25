@@ -1,5 +1,7 @@
 # Agent Development Protocol
 
+[日本語](README.ja.md)
+
 Reusable AI-agent development protocol for repository-based software projects.
 
 The core idea is simple:
